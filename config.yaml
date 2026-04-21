@@ -1,0 +1,87 @@
+model:
+  # Base Stable Diffusion model (v1.5 works with ControlNet scribble)
+  base_model: "runwayml/stable-diffusion-v1-5"
+
+  # ControlNet conditioned on scribble/freehand sketches
+  controlnet: "lllyasviel/control_v11p_sd15_scribble"
+
+  # Latent Consistency Model LoRA for fast 4-step inference
+  use_lcm: true
+  lcm_lora: "latent-consistency/lcm-lora-sdv1-5"
+
+  # Alternative: SDXL-Turbo for 1-step generation (no ControlNet; uses img2img)
+  use_sdxl_turbo: false
+  sdxl_turbo_model: "stabilityai/sdxl-turbo"
+
+inference:
+  # Steps: 4 for LCM fast mode, ~20 for standard SD
+  num_inference_steps: 4
+  # Guidance scale: 1.0-2.0 for LCM, 7.5 for standard SD
+  guidance_scale: 1.5
+  # How strongly the sketch controls the output (0–1)
+  controlnet_conditioning_scale: 0.9
+  # Output resolution (must be multiple of 8)
+  image_width: 512
+  image_height: 512
+  # Number of images to generate per prompt
+  num_images_per_prompt: 1
+  # Negative prompt (applies globally)
+  default_negative_prompt: "blurry, low quality, distorted, ugly, watermark, signature"
+
+editing:
+  # Strength for img2img inpainting (0=no change, 1=full repaint)
+  inpaint_strength: 0.85
+  # Blur radius for mask feathering (softens edit boundary)
+  mask_blur_radius: 8
+  # Dilate the sketch-derived mask by this many pixels
+  mask_dilation: 12
+
+sketch_preprocessing:
+  # Auto-threshold freehand strokes before feeding to ControlNet
+  auto_threshold: true
+  threshold_value: 128
+  # Gaussian blur to reduce noise in freehand sketches (0 = off)
+  denoise_sigma: 1.0
+  # Invert sketch if white-on-black (ControlNet expects black-on-white)
+  auto_invert: true
+  # Resize sketch to match inference resolution
+  resize_method: "lanczos"
+
+optimization:
+  # Use float16 precision (2x speed, same quality on modern GPUs)
+  use_fp16: true
+  # Enable xformers memory-efficient attention
+  enable_xformers: true
+  # torch.compile (PyTorch 2.x only; ~30% speedup, slow first run)
+  compile_model: false
+  # Export to ONNX for faster CPU inference
+  use_onnx: false
+  # Tile VAE to reduce VRAM usage on low-VRAM GPUs
+  tile_vae: false
+  # Attention slicing ("auto", integer, or false)
+  attention_slicing: "auto"
+
+ui:
+  # Server settings
+  host: "0.0.0.0"
+  port: 7860
+  share: false            # Set true to get a public Gradio link
+  theme: "soft"
+  title: "Sketch → Image  ✏️🎨"
+  # Default canvas size in the UI
+  canvas_width: 512
+  canvas_height: 512
+  # Show advanced options panel by default
+  show_advanced: false
+
+paths:
+  # Where downloaded model weights are cached
+  model_cache_dir: "./model_cache"
+  # Temporary directory for intermediate outputs
+  tmp_dir: "./tmp"
+  # Output directory for saved generations
+  output_dir: "./outputs"
+
+logging:
+  level: "INFO"
+  log_latency: true

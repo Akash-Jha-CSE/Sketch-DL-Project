@@ -1,0 +1,36 @@
+# Core deep learning
+torch>=2.1.0
+torchvision>=0.16.0
+accelerate>=0.25.0
+
+# Diffusion models & ControlNet
+diffusers>=0.25.0
+transformers>=4.36.0
+safetensors>=0.4.0
+peft>=0.7.0                 # For LCM-LoRA
+
+# Image processing
+Pillow>=10.0.0
+opencv-python>=4.8.0
+scikit-image>=0.22.0
+kornia>=0.7.0               # GPU-accelerated image ops
+
+# Web UI
+gradio>=4.15.0
+
+# Inference optimization
+onnx>=1.15.0
+onnxruntime-gpu>=1.16.0     # Use onnxruntime (CPU only) if no GPU
+xformers>=0.0.23            # Memory-efficient attention (optional but recommended)
+
+# Utilities
+PyYAML>=6.0
+numpy>=1.24.0
+tqdm>=4.65.0
+Pillow>=10.0.0
+huggingface-hub>=0.20.0
+scipy>=1.11.0
+
+# Benchmarking / testing
+pytest>=7.4.0
+matplotlib>=3.7.0
